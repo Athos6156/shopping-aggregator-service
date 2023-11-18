@@ -1,5 +1,5 @@
 from flask import Flask
-import requests  # for making HTTP requests to other microservices
+import requests
 import asyncio
 import aiohttp
 
