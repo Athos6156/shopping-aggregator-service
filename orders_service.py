@@ -1,5 +1,4 @@
-from flask import Flask
-
+from flask import Flask, jsonify
 orders_app = Flask(__name__)
 
 
@@ -10,7 +9,12 @@ def hello_world():
 
 @orders_app.route('/api/orders/new')
 def new_order():
-    return 'Hello World, I am the Orders Service, I will handle orders!'
+    return jsonify({
+        "order_id": "O123456789",
+        "status": "Created",
+        "items": "Some Stuff",
+        "price": 100.00
+    })
 
 
 @orders_app.route('/api/orders/update')

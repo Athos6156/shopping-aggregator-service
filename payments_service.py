@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 payments_app = Flask("Payments")
 
@@ -10,7 +10,12 @@ def hello_world():
 
 @payments_app.route('/api/payment/pay')
 def accept_payment():
-	return 'Hello World, I am the payments service. Wheres your money?!'
+	return jsonify({
+		"payment_id": "P123456789",
+		"status": "Processed",
+		"amount": "100.00",
+		"confirmation": "CONFIRMED"
+	})
 
 
 @payments_app.route('/api/payment/refund')
