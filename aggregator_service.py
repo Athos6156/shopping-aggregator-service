@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 import requests
 import asyncio
 import aiohttp
@@ -33,7 +33,7 @@ async def aggregate_async_test():
 
     async with aiohttp.ClientSession() as session:
         gets = [fetch(session, addr) for addr in addrs]
-
+        # Append data to results by first-come-first-serve order
         for future in asyncio.as_completed(gets):
             result = await future
             results.append(result)
@@ -54,12 +54,12 @@ def aggregate_async_execute():
 # This is a dummy sync method for customer profile:
 @aggregator_app.route('/api/aggregate/<cus_id>')
 def customer_profile(cus_id):
-    # Synchronous calls to fetch data from all three microservices
+    # Synchronous calls to get data from all three microservices
     user_details = requests.get(f'http://127.0.0.1:8080/api/user/details/{cus_id}').json()
     order_details = requests.get(f'http://127.0.0.1:8081/api/orders/get/{cus_id}').json()
     payment_details = requests.get(f'http://127.0.0.1:8082/api/payments/find/{cus_id}').json()
 
-    # Aggregate the data into one complete customer profile
+    # Combine data into customer profile
     profile = {
         "UserDetails": user_details,
         "OrderHistory": order_details.get('orders', []),
@@ -70,6 +70,7 @@ def customer_profile(cus_id):
 
 
 # This is a dummy async method for checkout process:
+# New method for User! Needs implementation
 async def fetch_user_details(session, cus_id):
     async with session.get(f'http://127.0.0.1:8080/api/user/details/{cus_id}') as response:
         return await response.text()
@@ -91,7 +92,7 @@ async def checkout(cus_id):
         user_details = fetch_user_details(session, cus_id)
         order = create_order(session)
         payment = process_payment(session)
-
+        # Wait and combine data to results in specific order for formatting
         results = await asyncio.gather(user_details, order, payment)
 
     checkout_info = (
