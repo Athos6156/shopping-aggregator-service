@@ -2,11 +2,9 @@ from flask import Flask, jsonify
 
 payments_app = Flask("Payments")
 
-
 @payments_app.route('/')
 def hello_world():
 	return 'Hello World, I am the payments service. Wheres your money?!'
-
 
 @payments_app.route('/api/payment/pay')
 def accept_payment():
