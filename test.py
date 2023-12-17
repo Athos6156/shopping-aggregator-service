@@ -61,6 +61,25 @@ class TestUserAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.data.decode('utf-8')), {'message': 'Order Service: Order placed successfully; Payment Service: Unable to verify payment.'})
 
+    def test_order_async_pay(self):
+        data = {
+            'order': {
+                "order_num": 123456,
+                "username": "new_user",
+                "status": "new",
+                "ship_num": 1
+            },
+            'payment': {
+                'payment_method': '4111111111111111',
+                'order_id': "test_order",
+                'amount': 437.00
+            }
+        }
+
+        response = self.app.post('/api/aggregate/order_pay_async', data=json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.data.decode('utf-8')), {'message': 'Order Service: Order placed successfully; Payment Service: Unable to verify payment.'})
+
 
 if __name__ == '__main__':
     unittest.main()
